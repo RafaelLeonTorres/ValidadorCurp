@@ -78,10 +78,25 @@ public class CurpValidatorService : ICurpValidatorService
 
     private static void ValidarEstado(string curp, DatosEntrada datos, List<string> errores)
     {
-        var estado = curp.Substring(CurpPosiciones.PosEstadoInicio, 2);
+        var estadoStr = curp.Substring(CurpPosiciones.PosEstadoInicio, 2);
 
-        if (!datos.EsMexicano && estado != "NE")
+        if (!Enum.TryParse<CurpEstado>(estadoStr, out var estado))
+        {
+            errores.Add($"La clave de estado '{estadoStr}' no es válida en la CURP.");
+            return;
+        }
+
+        // Validación para extranjeros
+        if (!datos.EsMexicano && estado != CurpEstado.NE)
+        {
             errores.Add("Para extranjeros el estado debe ser 'NE'.");
+        }
+
+        // Validación para mexicanos
+        if (datos.EsMexicano && estado == CurpEstado.NE)
+        {
+            errores.Add("Para mexicanos el estado no puede ser 'NE'.");
+        }
     }
 
     private static void ValidarConsonantesInternas(string curp, DatosEntrada datos, List<string> errores)
