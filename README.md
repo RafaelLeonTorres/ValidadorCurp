@@ -7,6 +7,7 @@ Aplicación Fullstack para validar una CURP contra:
 * Apellido Materno
 * Fecha de nacimiento
 * Sexo
+* Estado
 * Nacionalidad
 
 El sistema compara la CURP contra los datos proporcionados y devuelve una lista de inconsistencias o confirma que es válida.
